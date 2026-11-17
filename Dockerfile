@@ -1,8 +1,9 @@
-FROM node:22-alpine AS build
+# Stage 1: Build the frontend
+FROM node:22-alpine AS frontend-build
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY package*.json ./
 
 RUN npm ci
 
@@ -10,8 +11,14 @@ COPY . .
 
 RUN npm run build
 
-FROM nginxinc/nginx-unprivileged:1.29-alpine AS production
 
-COPY --from=build /app/dist/ /usr/share/nginx/html/
+# Stage 2: Serve the frontend with Nginx
+FROM nginx:alpine
 
-EXPOSE 8080
+COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
+
+COPY --from=frontend-build /app/dist /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
