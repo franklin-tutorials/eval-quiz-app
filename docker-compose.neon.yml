@@ -1,0 +1,6 @@
+# Surcharge : le backend utilise PostgreSQL Neon (cloud) au lieu du conteneur local.
+# Usage : docker compose -f docker-compose.yml -f docker-compose.neon.yml up -d
+services:
+  backend:
+    environment:
+      DATABASE_URL: ${NEON_DATABASE_URL:?NEON_DATABASE_URL manquant dans .env}

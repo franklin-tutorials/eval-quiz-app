@@ -1,0 +1,15 @@
+.git
+.github
+node_modules
+dist
+backend
+database
+docs
+preuves
+scripts
+.env
+.env.*
+Dockerfile*
+docker-compose.yml
+*.md
+*.log

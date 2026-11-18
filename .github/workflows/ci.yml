@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TRIVY_IMAGE: aquasec/trivy:0.76.2
+
+jobs:
+  compose:
+    name: Validation Compose
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Vérifier la syntaxe de docker-compose.yml
+        run: |
+          cp .env.example .env
+          docker compose config --quiet
+          echo "docker-compose.yml valide"
+
+  build-scan:
+    name: Build et scan Trivy
+    needs: compose
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: frontend
+            dockerfile: Dockerfile.front
+            context: .
+          - name: backend
+            dockerfile: backend/Dockerfile.back
+            context: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build de l'image ${{ matrix.name }}
+        run: |
+          docker build -f ${{ matrix.dockerfile }} \
+            -t quiz-${{ matrix.name }}:${{ github.sha }} ${{ matrix.context }}
+
+      - name: Rapport Trivy complet (non bloquant)
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v "$PWD":/out \
+            "$TRIVY_IMAGE" image --scanners vuln --no-progress \
+            --severity CRITICAL,HIGH,MEDIUM,LOW \
+            --format table --output /out/trivy-${{ matrix.name }}.txt \
+            quiz-${{ matrix.name }}:${{ github.sha }}
+          cat trivy-${{ matrix.name }}.txt
+
+      - name: Contrôle Trivy bloquant (CRITICAL)
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            "$TRIVY_IMAGE" image --scanners vuln --no-progress \
+            --severity CRITICAL --exit-code 1 \
+            quiz-${{ matrix.name }}:${{ github.sha }}
+
+      - name: Conserver le rapport
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-${{ matrix.name }}
+          path: trivy-${{ matrix.name }}.txt
