@@ -49,3 +49,11 @@ Lisez les documents dans cet ordre :
 - Versionnez les fichiers de configuration, les scripts et les workflows **que vous produisez**.
 - Ne commitez jamais de mots de passe, URL PostgreSQL contenant des identifiants, clés API, secrets GitHub/GitLab ou fichiers `.env` réels.
 - Une démonstration validée reste acquise même si les ressources cloud sont supprimées ensuite.
+
+## Note à l'utilisation de l'IA
+
+Lucas et moi même avons utilisé Claude Code version pro. pour la réalisation de ce projet.
+
+Claude n'a pas travaillé à notre place, il a été un guide pour nous permettre d'avancer et de comprendre ce que nous mettions en place.
+
+Vous pouvez le voir, les commentaires dans les différents fichiers sont écrits à la main avec nos mots, notre façon de vulgariser/voir les choses.
