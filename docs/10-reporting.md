@@ -238,4 +238,85 @@ What's next:
 
 Erreur normale, puisque Nginx envoie ses appels à la machine "backend" qui n'existe pas. Il n'y a qu'un seul conteneur Frontend, d'où l'intérêt d'utiliser "Docker Compose".
 
+1.5 Docker Compose
+
+Avec Docker Compose, on va pouvoir lancer les deux conteneurs Frontend et Backend afin que l'application fonctionne correctement.
+
+Création du fichier "docker-compose.yml" à la racine. Toutes les lignes sont commentées.
+
+Modification du fichier .env (pour définir nos propres variables)
+
+`cp .env.example .env` pour récupérer les variables prédéfinies et les modifier
+
+Ensuite, on lance le compose `docker compose up -d --build` :
+
+"$ docker compose up -d --build
+[+] up 12/12
+ ✔ Image postgres:17-alpine Pulled                                                                                                   154.7s
+[+] Building 6.7s (25/25) FINISHED                                                                                                         
+ => [internal] load local bake definitions                                                                                            0.1s
+ => => reading from stdin 1.16kB                                                                                                      0.1s
+ => [frontend internal] load build definition from Dockerfile                                                                         0.1s
+ => => transferring dockerfile: 612B                                                                                                  0.0s
+ => [backend internal] load build definition from Dockerfile                                                                          0.1s
+ => => transferring dockerfile: 623B                                                                                                  0.0s
+ => [frontend internal] load metadata for docker.io/library/nginx:alpine                                                              0.1s
+ => [backend internal] load metadata for docker.io/library/node:22-alpine                                                             0.1s
+ => [backend internal] load .dockerignore                                                                                             0.0s
+ => => transferring context: 58B                                                                                                      0.0s
+ => [frontend internal] load .dockerignore                                                                                            0.0s
+ => => transferring context: 85B                                                                                                      0.0s
+ => [frontend 1/5] FROM docker.io/library/node:22-alpine@sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a      0.1s
+ => => resolve docker.io/library/node:22-alpine@sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a               0.1s
+ => [backend internal] load build context                                                                                             0.0s
+ => => transferring context: 101B                                                                                                     0.0s
+ => [frontend internal] load build context                                                                                            0.0s
+ => => transferring context: 2.49kB                                                                                                   0.0s
+ => [frontend stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:b50897d5c7b1aa08067c3d90c5e8b3e47ec4e3c91c91446f67820228f7b41e  0.1s
+ => => resolve docker.io/library/nginx:alpine@sha256:b50897d5c7b1aa08067c3d90c5e8b3e47ec4e3c91c91446f67820228f7b41e34                 0.1s
+ => CACHED [frontend 2/5] WORKDIR /app                                                                                                0.0s
+ => CACHED [backend 3/5] COPY package.json package-lock.json ./                                                                       0.0s
+ => CACHED [backend 4/5] RUN npm ci --omit=dev                                                                                        0.0s
+ => CACHED [backend 5/5] COPY server.js ./                                                                                            0.0s
+ => [backend] exporting to image                                                                                                      0.7s
+ => => exporting layers                                                                                                               0.0s
+ => => exporting manifest sha256:db50901dd438de2e0b30a1a42b36a3462f384d8e6ed4ec59a917e3d33223f62a                                     0.0s
+ => => exporting config sha256:f6c596e23f507368095704b21de9b57e1b727a66bfa85718c1a61f7056f4ab30                                       0.0s
+ => => exporting attestation manifest sha256:7b210391e09cd87cb1b1968bd6563269e707aaea7aa56b53c3a67fd3e2fce041                         0.0s
+ => => exporting manifest list sha256:46b2b7c360e91f824e6657c532cbd5a47996947465da8daaa078ab0ec03d3392                                0.4s
+ => => naming to docker.io/library/eval-quiz-app-backend:latest                                                                       0.0s
+ => => unpacking to docker.io/library/eval-quiz-app-backend:latest                                                                    0.0s
+ => CACHED [frontend build 3/6] COPY package.json package-lock.json ./                                                                0.0s
+ => CACHED [frontend build 4/6] RUN npm ci                                                                                            0.0s
+ => [frontend build 5/6] COPY . .                                                                                                     0.7s
+ => [frontend build 6/6] RUN npm run build                                                                                            3.3s
+ => [backend] resolving provenance for metadata file                                                                                  0.1s
+ => CACHED [frontend stage-1 2/3] COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf                                                0.0s
+ => CACHED [frontend stage-1 3/3] COPY --from=build /app/dist /usr/share/nginx/html                                                   0.0s
+ => [frontend] exporting to image                                                                                                     0.5s
+ => => exporting layers                                                                                                               0.0s
+ => => exporting manifest sha256:868879fb938773b50f8c28c9dfa68c3ac6770fd857c7c78109baf5bb7afee5c7                                     0.1s
+ => => exporting config sha256:627a20715708eaf6a43e319535d3822dba90a9bed6117ba69d7ba2f9cf395aa8                                       0.0s
+ => => exporting attestation manifest sha256:4d50c1f52c215867d6fb8713ae113b84f07457906f676966276dde56bd82c613                         0.0s
+ => => exporting manifest list sha256:6a8cd2531672749fba028231096b834f939196be93d00e8c40bd4e35e696d5ab                                0.0s
+ => => naming to docker.io/library/eval-quiz-app-frontend:latest                                                                      0.0s
+ => => unpacking to docker.io/library/eval-quiz-app-frontend:latest                                                                   0.1s
+ => [frontend] resolving provenance for metadata file                                                                                 0.1s
+[+] up 19/19
+ ✔ Image postgres:17-alpine           Pulled                                                                                         154.7s
+ ✔ Image eval-quiz-app-frontend       Built                                                                                            7.4s
+ ✔ Image eval-quiz-app-backend        Built                                                                                            7.2s
+ ✔ Network eval-quiz-app_default      Created                                                                                          0.1s
+ ✔ Volume eval-quiz-app_pgdata        Created                                                                                          0.0s
+ ✔ Container eval-quiz-app-db-1       Healthy                                                                                          7.2s
+ ✔ Container eval-quiz-app-backend-1  Started                                                                                          7.0s
+ ✔ Container eval-quiz-app-frontend-1 Started"
+
+ Et voilà ! 
+
+ On ouvre "http://localhost:8087"
+
+ Tout fonctionne !
+
+
 
