@@ -22,4 +22,46 @@ Nous avons choisi "switzerlandnorth" pour des raisons de compatibilité et de fa
 
 Toutes les commandes seront commentées dans le fichier "scripts/deploy.sh"
 
+Vérification 
 
+az acr login --name "$ACR_NAME"
+
+"Login Succeeded"
+
+`ACR_SERVER=$(az acr show --name "$ACR_NAME" --query loginServer -o tsv)`
+`TAG=$(git rev-parse --short HEAD)`
+`echo "$ACR_SERVER  $TAG"`
+
+Construction des deux images
+
+`docker build -t "$ACR_SERVER/quiz-backend:$TAG" ./backend`
+`docker build -t "$ACR_SERVER/quiz-frontend:$TAG" .`
+
+Envoie des images dans l'ACR
+
+`docker push "$ACR_SERVER/quiz-backend:$TAG"`
+`docker push "$ACR_SERVER/quiz-frontend:$TAG"`
+
+Vérification finale : 
+
+`az acr repository list --name "$ACR_NAME" -o table`
+`az acr repository show-tags --name "$ACR_NAME" --repository` `quiz-backend -o table`
+`az acr repository show-tags --name "$ACR_NAME" --repository` `quiz-frontend -o table`
+
+Retour : 
+
+"$ az acr repository list --name "$ACR_NAME" -o table
+az acr repository show-tags --name "$ACR_NAME" --repository quiz-backend -o table
+az acr repository show-tags --name "$ACR_NAME" --repository quiz-frontend -o table
+Result
+-------------
+quiz-backend
+quiz-frontend
+Result
+--------
+9f112e5
+Result
+--------
+9f112e5"
+
+Les deux images sont bien présentes.
