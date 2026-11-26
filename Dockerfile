@@ -13,8 +13,8 @@ RUN npm run build
 
 # Deuxième étape
 
-# Deuxième étape : nginx sans root
-FROM nginxinc/nginx-unprivileged:stable-alpine
+# Deuxième étape : nginx sans root, 1.31 plutot que alipne tout court, pour ne pas changer de version sans s'en rendre compte.
+FROM nginxinc/nginx-unprivileged:1.31-alpine
 USER root
 RUN apk upgrade --no-cache
 USER nginx
