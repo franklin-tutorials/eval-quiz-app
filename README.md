@@ -19,6 +19,18 @@ L'application comporte un frontend, un backend et une base PostgreSQL. Elle peut
 
 Les jalons sont validés progressivement. Une difficulté sur PostgreSQL cloud n'annule pas les jalons déjà acquis et n'interdit pas de démontrer la partie CI/CD technique.
 
+## Équipe et répartition du travail
+
+| Jalon | Samy | Sofiane |
+| --- | --- | --- |
+| J0 · Prérequis Azure | | Vérifier l’abonnement, les droits et les quotas |
+| J1 · Conteneurisation locale | Préparer le schéma, les Dockerfiles et la configuration Nginx | Préparer Docker Compose, PostgreSQL et `.env.example`, puis vérifier la persistance |
+| J2 · Sécurité des images | Scanner et corriger l’image frontend avec Trivy | Scanner et corriger l’image backend avec Trivy |
+| J3 à J5 · Déploiement Azure | Vérifier le parcours du quiz et l’enregistrement des résultats | Configurer ACR, Azure Container Apps et PostgreSQL cloud |
+| J6 · CI/CD | Configurer les builds et le scan Trivy bloquant sur les pull requests | Automatiser la publication dans ACR et le déploiement après fusion sur `main` |
+
+On commence par le J1. Ensemble, on termine un quiz en local et on vérifie que son résultat est toujours présent après recréation des conteneurs. Chacun relit les pull requests de l’autre.
+
 ## Travail à partir du dépôt officiel
 
 Le formateur publie le code de départ et les consignes sur la branche `main` de son dépôt **de référence**. **Chaque groupe crée un fork de ce dépôt sur GitHub**, puis travaille exclusivement dans son fork. Les branches `feature/*` et les Pull Requests doivent cibler **`main` du fork du groupe**, jamais `main` du formateur.
