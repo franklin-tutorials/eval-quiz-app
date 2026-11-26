@@ -318,5 +318,18 @@ Ensuite, on lance le compose `docker compose up -d --build` :
 
  Tout fonctionne !
 
+1.6 Test création utilisateur
 
+On va peupler la base d'un utilisateur en réalisant un test pour voir si tout fonctionne.
 
+Quiz réalisé, résultats catastrophiques (je n'ai pas répondu sérieusement)
+
+On lance la commande `docker compose exec db sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT * FROM users;"'`
+
+Retour : "$ docker compose exec db sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT * FROM users;"'
+ id | firstname |          email          |         created_at         
+----+-----------+-------------------------+----------------------------
+  1 | Morgan    | relano.morgan@gmail.com | 2026-11-26 10:13:16.749883
+(1 row)"
+
+Et voilà pour le J1 !
