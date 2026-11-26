@@ -36,7 +36,8 @@ services:
   frontend:
     build: .
     ports:
-      - "8087:80"
+      - "8087:8080"
+# on a changé le port qui était en 8087:80 en 8087:8080.
     depends_on:
       - backend
 
