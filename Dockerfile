@@ -18,7 +18,9 @@ FROM nginxinc/nginx-unprivileged:stable-alpine
 USER root
 RUN apk upgrade --no-cache
 USER nginx
-COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
+# Template nginx : ${BACKEND_HOST} est remplacé au démarrage (envsubst de l image nginx)
+COPY nginx/default.conf.template /etc/nginx/templates/default.conf.template
+ENV BACKEND_HOST=backend:3007
 COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=3s CMD wget -qO- http://localhost:8080/ || exit 1

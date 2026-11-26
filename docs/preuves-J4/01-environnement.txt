@@ -1,0 +1,5 @@
+# Environnement Container Apps (date : 2026-11-26 14:33 UTC)
+$ az containerapp env show -n env-quiz-app -g rg-quiz-app --query "{nom:name, etat:properties.provisioningState, mode:properties.environmentMode, region:location}" -o table
+Nom           Etat       Mode              Region
+------------  ---------  ----------------  -----------------
+env-quiz-app  Succeeded  WorkloadProfiles  Switzerland North

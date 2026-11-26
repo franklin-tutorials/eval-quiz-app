@@ -1,0 +1,13 @@
+# Images dans l'ACR
+$ az acr repository show-tags -n acrquizappmr26 --repository quiz-backend --detail -o table
+Tag            Digest                                                                   Maj
+-------------  -----------------------------------------------------------------------  ----------------------------
+9f112e5        sha256:9c4aae3619640bb95fb8a8ccba35bfd3c276477ca344e124e0d32e137791f346  2026-11-26T13:44:34.5408433Z
+a27379f-dirty  sha256:892d45f29cfd325e0900a2e34e405085f382908c31cab7fc6cbbb9e80a443646  2026-11-26T14:27:27.7025988Z
+
+$ az acr repository show-tags -n acrquizappmr26 --repository quiz-frontend --detail -o table
+Tag            Digest                                                                   Maj
+-------------  -----------------------------------------------------------------------  ----------------------------
+9f112e5        sha256:5c6352d4bbc483d613af571450e7d06481822e791f35444b514b188c70352684  2026-11-26T13:44:41.186232Z
+a27379f-dirty  sha256:24a40e53d6f72df4302328eb0178dfefbdc4113d37b911177f8c851939411823  2026-11-26T14:27:29.3462362Z
+
