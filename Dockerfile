@@ -13,7 +13,15 @@ RUN npm run build
 
 # Deuxième étape
 
-FROM nginx:alpine
+# Deuxième étape : nginx sans root
+FROM nginxinc/nginx-unprivileged:stable-alpine
+USER root
+RUN apk upgrade --no-cache
+USER nginx
 COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/dist /usr/share/nginx/html
-EXPOSE 80
+EXPOSE 8080
+HEALTHCHECK --interval=30s --timeout=3s CMD wget -qO- http://localhost:8080/ || exit 1
+
+# la conf de nginx qui fait en sorte que l'utilisateur de base soit l'utilisateur nginx et non root est copier dans la default conf.
+
