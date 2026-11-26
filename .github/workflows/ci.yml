@@ -1,0 +1,69 @@
+# "name" est le nom affiché dans l'onglet Actions de GitHub
+name: CI
+
+# Ces trois lignes lancent la CI à chaque PR qui cible main.
+on:
+  pull_request:
+    branches: [main]
+
+# Donne au workflow le minimum de droits : il peut lire le code, rien de plus.
+permissions:
+  contents: read
+
+jobs:
+  build-and-scan:
+    name: build-and-scan (${{ matrix.service }})
+    # GitHub prête une machine Linux temporaire sur laquelle Docker est déjà installé.
+    runs-on: ubuntu-latest
+    strategy:
+      # Si le backend échoue, le scan du frontend va quand même jusqu'au bout.
+      fail-fast: false
+      matrix:
+        include:
+          # service : donne le nom de l'image
+          # context : indique le dossier du Dockerfile
+          - service: backend
+            context: ./backend
+          - service: frontend
+            context: .
+
+    steps:
+      # actions/checkout télécharge le code de la branche sur la machine.
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Construit l'image, taguée avec le SHA du commit pour être traçable.
+      - name: Build de l'image
+        run: docker build -t quiz-${{ matrix.service }}:${{ github.sha }} ${{ matrix.context }}
+
+      # Rapport complet (non bloquant), conservé comme preuve.
+      - name: Rapport Trivy complet
+        run: |
+          mkdir -p trivy-report
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v "$PWD/trivy-report":/out \
+            aquasec/trivy:0.76.2 image --no-progress \
+            --severity LOW,MEDIUM,HIGH,CRITICAL \
+            -o /out/${{ matrix.service }}.txt \
+            quiz-${{ matrix.service }}:${{ github.sha }}
+
+      # Publie le rapport dans les "Artifacts" de l'exécution, même en cas d'échec.
+      - name: Publier le rapport
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-${{ matrix.service }}
+          path: trivy-report/
+
+      # Bloque uniquement si une vulnérabilité de sévérité CRITICAL est trouvée.
+      # Avec "--exit-code 1", Trivy se termine avec le code 1 s'il trouve une
+      # vulnérabilité critique : GitHub considère alors le job comme un échec.
+      - name: Trivy bloquant (CRITICAL)
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            aquasec/trivy:0.76.2 image --no-progress \
+            --severity CRITICAL \
+            --exit-code 1 \
+            quiz-${{ matrix.service }}:${{ github.sha }}
