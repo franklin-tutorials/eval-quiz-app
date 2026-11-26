@@ -14,7 +14,8 @@ RUN npm run build
 # Deuxième étape
 
 # Deuxième étape : nginx sans root
-FROM nginxinc/nginx-unprivileged:stable-alpine
+# Branche mainline 1.31 : la branche stable (1.30.6) a 4 CVE CRITICAL non corrigées dans l image officielle
+FROM nginxinc/nginx-unprivileged:1.31-alpine
 USER root
 RUN apk upgrade --no-cache
 USER nginx
