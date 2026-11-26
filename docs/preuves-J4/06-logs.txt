@@ -1,0 +1,26 @@
+# Logs console de backend
+$ az containerapp logs show -n backend -g rg-quiz-app --type console --tail 15 --format text
+2026-11-26T14:33:45.29793  Connecting to the container 'backend'...
+2026-11-26T14:33:45.36870  Successfully Connected to container: 'backend' [Revision: 'backend--0000002', Replica: 'backend--0000002-649888cd49-ggv5c']
+2026-11-26T14:28:30.4615613Z stdout F Server running on port 3007
+
+# Logs console de frontend
+$ az containerapp logs show -n frontend -g rg-quiz-app --type console --tail 15 --format text
+2026-11-26T14:33:49.95483  Connecting to the container 'frontend'...
+2026-11-26T14:33:50.03887  Successfully Connected to container: 'frontend' [Revision: 'frontend--0000001', Replica: 'frontend--0000001-85978b59b6-dnc69']
+2026-11-26T14:25:28.9494063Z stderr F 2026/11/26 14:25:28 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2026-11-26T14:25:28.9494367Z stderr F 2026/11/26 14:25:28 [notice] 1#1: start worker processes
+2026-11-26T14:25:28.9496105Z stderr F 2026/11/26 14:25:28 [notice] 1#1: start worker process 35
+2026-11-26T14:25:28.9498310Z stderr F 2026/11/26 14:25:28 [notice] 1#1: start worker process 36
+2026-11-26T14:25:28.9499770Z stderr F 2026/11/26 14:25:28 [notice] 1#1: start worker process 37
+2026-11-26T14:25:28.9503243Z stderr F 2026/11/26 14:25:28 [notice] 1#1: start worker process 38
+2026-11-26T14:25:49.8905601Z stdout F 100.100.0.65 - - [26/Nov/2026:14:25:49 +0000] "GET / HTTP/1.1" 200 396 "-" "curl/8.23.0" "x.x.x.x (IP masquée)"
+2026-11-26T14:26:11.3072014Z stdout F 100.100.0.65 - - [26/Nov/2026:14:26:11 +0000] "GET /health HTTP/1.1" 200 15 "-" "curl/8.23.0" "x.x.x.x (IP masquée)"
+2026-11-26T14:26:11.5059486Z stdout F 100.100.0.117 - - [26/Nov/2026:14:26:11 +0000] "GET /api/admin/results HTTP/1.1" 401 26 "-" "curl/8.23.0" "x.x.x.x (IP masquée)"
+2026-11-26T14:28:41.7995668Z stdout F 100.100.0.65 - - [26/Nov/2026:14:28:41 +0000] "GET /health HTTP/1.1" 200 15 "-" "curl/8.23.0" "x.x.x.x (IP masquée)"
+2026-11-26T14:29:20.8735299Z stdout F 100.100.0.65 - - [26/Nov/2026:14:29:20 +0000] "GET /health HTTP/1.1" 200 15 "-" "curl/8.23.0" "x.x.x.x (IP masquée)"
+2026-11-26T14:33:35.9935571Z stdout F 100.100.0.65 - - [26/Nov/2026:14:33:35 +0000] "GET / HTTP/1.1" 200 396 "-" "curl/8.23.0" "x.x.x.x (IP masquée)"
+2026-11-26T14:33:36.1660510Z stdout F 100.100.0.65 - - [26/Nov/2026:14:33:36 +0000] "GET /health HTTP/1.1" 200 15 "-" "curl/8.23.0" "x.x.x.x (IP masquée)"
+2026-11-26T14:33:36.3283290Z stdout F 100.100.0.117 - - [26/Nov/2026:14:33:36 +0000] "GET /api/admin/results HTTP/1.1" 401 26 "-" "curl/8.23.0" "x.x.x.x (IP masquée)"
+2026-11-26T14:33:47.7538975Z stdout F 100.100.0.65 - - [26/Nov/2026:14:33:47 +0000] "GET / HTTP/1.1" 200 396 "-" "python-requests/2.33.0" "x.x.x.x (IP masquée)"
+

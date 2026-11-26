@@ -1,0 +1,55 @@
+# Tests HTTP via l'URL publique du frontend
+$ curl -sS -i https://frontend.icysea-a9d6a9a8.switzerlandnorth.azurecontainerapps.io/
+HTTP/1.1 200 OK
+server: nginx/1.30.6
+date: Thu, 26 Nov 2026 14:33:35 GMT
+content-type: text/html
+content-length: 396
+last-modified: Thu, 26 Nov 2026 14:23:59 GMT
+etag: "6b0840ff-18c"
+accept-ranges: bytes
+
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+
+
+$ curl -sS -i https://frontend.icysea-a9d6a9a8.switzerlandnorth.azurecontainerapps.io/health
+HTTP/1.1 200 OK
+server: nginx/1.30.6
+date: Thu, 26 Nov 2026 14:33:36 GMT
+content-type: application/json; charset=utf-8
+content-length: 15
+x-powered-by: Express
+access-control-allow-origin: *
+ratelimit-policy: 100;w=900
+ratelimit-limit: 100
+ratelimit-remaining: 98
+ratelimit-reset: 645
+etag: W/"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg"
+
+{"status":"ok"}
+
+$ curl -sS -i https://frontend.icysea-a9d6a9a8.switzerlandnorth.azurecontainerapps.io/api/admin/results
+HTTP/1.1 401 Unauthorized
+server: nginx/1.30.6
+date: Thu, 26 Nov 2026 14:33:36 GMT
+content-type: application/json; charset=utf-8
+content-length: 26
+x-powered-by: Express
+access-control-allow-origin: *
+ratelimit-policy: 100;w=900
+ratelimit-limit: 100
+ratelimit-remaining: 97
+ratelimit-reset: 645
+etag: W/"1a-VyjdfRRKha+wzvtaWShbAIDID7o"
+
+{"error":"Token required"}
+
+# Backend non joignable directement depuis Internet (ingress interne)
+$ curl -sS -o page.html -w "%{http_code}" https://backend.internal.icysea-a9d6a9a8.switzerlandnorth.azurecontainerapps.io/health
+404
+<title>Azure Container App - Unavailable</title>
+Error 404 - This Container App is stopped or does not exist.
+
+=> Le backend n est PAS joignable depuis Internet (ingress interne), alors que /health repond 200 a travers le frontend.

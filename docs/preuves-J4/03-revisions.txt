@@ -1,0 +1,12 @@
+# Révisions de backend
+$ az containerapp revision list -n backend -g rg-quiz-app -o table
+Revision          Active    Sante    Etat     Trafic    Replicas    Creee
+----------------  --------  -------  -------  --------  ----------  -------------------------
+backend--0000002  True      Healthy  Running  100       1           2026-11-26T14:28:06+00:00
+
+# Révisions de frontend
+$ az containerapp revision list -n frontend -g rg-quiz-app -o table
+Revision           Active    Sante    Etat     Trafic    Replicas    Creee
+-----------------  --------  -------  -------  --------  ----------  -------------------------
+frontend--0000001  True      Healthy  Running  100       1           2026-11-26T14:25:12+00:00
+

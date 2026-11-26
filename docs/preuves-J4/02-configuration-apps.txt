@@ -1,0 +1,46 @@
+# Configuration de l'app backend
+$ az containerapp show -n backend -g rg-quiz-app --query "{...}" -o yaml
+app: backend
+authRegistre: system
+etat: Succeeded
+fqdn: backend.internal.icysea-a9d6a9a8.switzerlandnorth.azurecontainerapps.io
+httpAutorise: true
+identite: SystemAssigned
+image: acrquizappmr26.azurecr.io/quiz-backend:a27379f-dirty
+ingressExterne: false
+portCible: 3007
+registre: acrquizappmr26.azurecr.io
+variables:
+- nom: ADMIN_USERNAME
+  secretRef: null
+  valeur: "***" (masqué)
+- nom: FROM_EMAIL
+  secretRef: null
+  valeur: ''
+- nom: JWT_SECRET
+  secretRef: jwt-secret
+  valeur: ''
+- nom: ADMIN_PASSWORD
+  secretRef: admin-password
+  valeur: ''
+- nom: RESEND_API_KEY
+  secretRef: resend-api-key
+  valeur: ''
+
+# Configuration de l'app frontend
+$ az containerapp show -n frontend -g rg-quiz-app --query "{...}" -o yaml
+app: frontend
+authRegistre: system
+etat: Succeeded
+fqdn: frontend.icysea-a9d6a9a8.switzerlandnorth.azurecontainerapps.io
+httpAutorise: false
+identite: SystemAssigned
+image: acrquizappmr26.azurecr.io/quiz-frontend:a27379f-dirty
+ingressExterne: true
+portCible: 8080
+registre: acrquizappmr26.azurecr.io
+variables:
+- nom: BACKEND_HOST
+  secretRef: null
+  valeur: backend:80
+
